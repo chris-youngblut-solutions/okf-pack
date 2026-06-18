@@ -1,0 +1,14 @@
+# Merge into the Space's `.space/manifest.toml` to mount {{NAME}}.
+# (okf-pack never edits a live manifest automatically — apply this by hand.)
+[packages]
+mounted = ["{{PACK_ID}}"]
+
+[[layout.tiles]]
+at        = "top-right"
+kind      = "panel"
+component = "{{COMPONENT}}"
+
+[seat.knowledge]
+embedder = "{{EMBEDDER}}"
+model    = "{{EMBED_MODEL}}"
+net_mode = "{{NET_MODE}}"

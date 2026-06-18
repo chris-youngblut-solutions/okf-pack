@@ -1,0 +1,21 @@
+# Spaces pack manifest — knowledge-context tile.
+# A portable knowledge-context store for a Space: indexes the Space dir into a project-local
+# OKF bundle over its own embedded store (DuckDB), speaks JSON-RPC over stdio, and never links
+# a Spaces crate (separate process => outside the AGPL boundary). Apache-2.0 OR MIT.
+# Contract: the Spaces pack-manifest v1 schema (package-toml-v1).
+id       = "spaces.knowledge-context"
+provides = "tile.knowledge-context"          # MUST be "tile."-prefixed; dispatched by namespace
+
+[runtime]
+kind = "process"                              # separate process — not builtin (AGPL boundary + own store)
+cmd  = "okf-pack"                             # this binary, on PATH
+args = ["serve", "--rpc", "stdio"]            # enters the JSON-RPC server loop
+io   = "stdio-jsonrpc"                        # structured request/response, not a raw pty
+
+[binds]
+cwd     = "$SPACE_DIR"                         # store + index scope to the Space directory
+inherit = ["env", "manifest"]                 # receives env + the Space manifest (e.g. [seat.knowledge])
+
+[capabilities]
+fs  = "space-dir"                             # reads/indexes the Space dir, writes .okf/ inside it
+net = "frontier"                              # declared; flips to "none" in local-embedder mode

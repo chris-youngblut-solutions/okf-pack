@@ -1,0 +1,316 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Note",
+  "description": "An `okf-ext/0.1` note. Field order here is the canonical frontmatter order\n(required → reserved → extension → links); KC-5 serializes in declaration\norder for deterministic round-trips.",
+  "type": "object",
+  "properties": {
+    "container": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "container-path": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "created": {
+      "description": "The gap-filling field every surface lacks today (back-filled from git/mtime).",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "description": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "fde-domain": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/FdeDomain"
+      }
+    },
+    "hardware": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "id": {
+      "type": "string"
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/TypedLink"
+      }
+    },
+    "resource": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "root": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Root"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "stakeholder": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "status": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Status"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "stop-if": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "superseded-by": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "supersedes": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "tech": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "tier": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Tier"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "timestamp": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "title": {
+      "type": "string"
+    },
+    "trigger": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "type": {
+      "$ref": "#/$defs/CkfType"
+    },
+    "updated": {
+      "description": "ISO `YYYY-MM-DD`. Maps to OKF `timestamp` on export.",
+      "type": "string"
+    },
+    "x-allowed-tools": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "x-argument-hint": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "x-mem-kind": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/MemKind"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "x-origin-session-id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "x-when-to-use": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "type",
+    "id",
+    "title",
+    "updated"
+  ],
+  "$defs": {
+    "CkfType": {
+      "description": "The unified, closed note-type axis: the dev.tel set plus the additions that\nlet the memory / skills / per-project surfaces map in. `decision` (dev.tel,\nglobally-id'd) and `adr` (per-project, numbered) stay distinct.",
+      "type": "string",
+      "enum": [
+        "project",
+        "root",
+        "domain",
+        "decision",
+        "fork",
+        "log",
+        "reference",
+        "memory",
+        "skill",
+        "adr",
+        "scope",
+        "task",
+        "index",
+        "doc"
+      ]
+    },
+    "FdeDomain": {
+      "description": "The cross-cutting FDE-domain axis (intentionally small).",
+      "type": "string",
+      "enum": [
+        "hardware",
+        "infra",
+        "tooling",
+        "product",
+        "ops",
+        "research"
+      ]
+    },
+    "LinkRel": {
+      "description": "Typed-link predicates. On OKF export these degrade to plain Markdown links\n(the predicate survives as link text) plus a sidecar record.",
+      "oneOf": [
+        {
+          "type": "string",
+          "enum": [
+            "related",
+            "depends-on",
+            "supersedes",
+            "superseded-by"
+          ]
+        },
+        {
+          "description": "Auto-derived from inline / wikilinks; never hand-authored.",
+          "type": "string",
+          "const": "mentions"
+        }
+      ]
+    },
+    "MemKind": {
+      "description": "Memory-surface sub-kind, carried as `x-mem-kind` when `type: memory`.",
+      "type": "string",
+      "enum": [
+        "user",
+        "feedback",
+        "project",
+        "reference",
+        "hardware"
+      ]
+    },
+    "Root": {
+      "description": "The eight workspace roots plus the decisions/forks `(cross-cutting)` sentinel.",
+      "type": "string",
+      "enum": [
+        "personal",
+        "^loop",
+        "frameworks",
+        "exposure",
+        "repositories",
+        "docs",
+        "ops",
+        "archive",
+        "(cross-cutting)"
+      ]
+    },
+    "Status": {
+      "description": "Union of the per-type status vocabularies (project / decision / fork). KC-9\n`lint` enforces which subset is valid for a given `type`.",
+      "type": "string",
+      "enum": [
+        "active",
+        "blocked",
+        "parked",
+        "shipped",
+        "archived",
+        "superseded",
+        "reversed",
+        "closed",
+        "demoted",
+        "re-triggered"
+      ]
+    },
+    "Tier": {
+      "description": "Workspace tier ladder (variant names already match the wire form).",
+      "type": "string",
+      "enum": [
+        "T0",
+        "T1",
+        "T2"
+      ]
+    },
+    "TypedLink": {
+      "description": "A typed link to another note, by stable `id`.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "note": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "rel": {
+          "$ref": "#/$defs/LinkRel"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "rel"
+      ]
+    }
+  }
+}

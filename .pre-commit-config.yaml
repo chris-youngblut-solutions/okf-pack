@@ -1,0 +1,77 @@
+minimum_pre_commit_version: 3.7.0
+default_install_hook_types:
+- pre-commit
+- commit-msg
+fail_fast: false
+repos:
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v5.0.0
+  hooks:
+  - id: trailing-whitespace
+    args:
+    - --markdown-linebreak-ext=md
+  - id: end-of-file-fixer
+  - id: check-merge-conflict
+  - id: check-added-large-files
+    args:
+    - --maxkb=512
+  - id: detect-private-key
+  - id: check-yaml
+    args:
+    - --allow-multiple-documents
+  - id: check-toml
+  - id: check-json
+  - id: check-symlinks
+  - id: check-case-conflict
+  - id: mixed-line-ending
+    args:
+    - --fix=lf
+- repo: https://github.com/gitleaks/gitleaks
+  rev: v8.22.0
+  hooks:
+  - id: gitleaks
+- repo: https://github.com/compilerla/conventional-pre-commit
+  rev: v3.6.0
+  hooks:
+  - id: conventional-pre-commit
+    stages:
+    - commit-msg
+    args:
+    - feat
+    - fix
+    - docs
+    - style
+    - refactor
+    - perf
+    - test
+    - build
+    - ci
+    - chore
+    - revert
+- repo: local
+  hooks:
+  - id: rust-fmt
+    name: rustfmt
+    entry: cargo fmt --all --
+    language: system
+    types:
+    - rust
+    pass_filenames: false
+  - id: rust-clippy
+    name: cargo clippy (warnings = errors)
+    entry: cargo clippy --all-targets --all-features -- -D warnings
+    language: system
+    types:
+    - rust
+    pass_filenames: false
+    stages:
+    - pre-push
+- repo: https://github.com/EmbarkStudios/cargo-deny
+  rev: 0.16.4
+  hooks:
+  - id: cargo-deny
+    args:
+    - check
+    - --hide-inclusion-graph
+    stages:
+    - pre-push

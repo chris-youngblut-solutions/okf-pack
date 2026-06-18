@@ -1,0 +1,17 @@
+# {{NAME}} — knowledge-context pack
+
+{{DESCRIPTION}}
+
+A Spaces pack (`{{PACK_ID}}`, tile `{{COMPONENT}}`) that indexes this Space into a
+portable OKF (`okf-ext/{{OKF_VERSION}}`) bundle, built with `okf-pack`.
+
+## Use
+
+- The host mounts this pack and runs `okf-pack serve --rpc stdio`.
+- Indexing and querying require an embedder; this Space is configured for
+  `{{EMBEDDER}}` (net mode `{{NET_MODE}}`). Set it in `.okf/config.toml`.
+- To mount in a Space, merge `.space/manifest.patch.toml` into the Space manifest.
+
+## License
+
+{{LICENSE_SLUG}}. © {{YEAR}} {{AUTHOR}}.

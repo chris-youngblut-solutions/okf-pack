@@ -1,0 +1,8 @@
+# Rust toolchain pinned to stable. Per Decision 5, libraries follow SemVer
+# and apps follow CalVer — but the toolchain itself is just "stable" so
+# Renovate / Dependabot can roll it forward without API churn.
+
+[toolchain]
+channel = "stable"
+profile = "default"
+components = ["rustfmt", "clippy", "rust-analyzer", "rust-src"]

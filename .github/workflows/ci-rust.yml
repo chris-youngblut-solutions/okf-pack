@@ -1,0 +1,76 @@
+# Rust language overlay for CI.
+# Appended as additional jobs to ci.base.yml at scaffold time.
+
+name: ci-rust
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ci-rust-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  rust:
+    name: rust (${{ matrix.toolchain }})
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        toolchain: [stable]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29  # v4.1.7
+        with:
+          persist-credentials: false
+
+      - name: Install toolchain
+        uses: dtolnay/rust-toolchain@29eef336d9b2848a0b548edc03f92a220660cdb8  # stable
+        with:
+          toolchain: ${{ matrix.toolchain }}
+          components: rustfmt, clippy
+
+      - name: Cache cargo
+        uses: Swatinem/rust-cache@82a92a6e8fbeee089604da2575dc567ae9ddeaab  # v2.7.5
+        with:
+          shared-key: ci-${{ matrix.toolchain }}
+
+      - name: Format check
+        run: cargo fmt --all -- --check
+
+      - name: Clippy
+        run: cargo clippy --all-targets --all-features -- -D warnings
+
+      # IF TEST_DISCIPLINE >= light:
+      - name: Build
+        run: cargo build --all-features --verbose
+
+      # IF TEST_DISCIPLINE >= pragmatic:
+      - name: Test
+        run: cargo test --all-features --verbose
+
+      # IF TEST_DISCIPLINE >= strict:
+      # - name: Coverage (cargo-llvm-cov, gate >= 80%)
+      #   run: |
+      #     cargo install cargo-llvm-cov --locked
+      #     cargo llvm-cov --all-features --fail-under-lines 80
+
+  audit:
+    name: cargo-deny
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29  # v4.1.7
+        with:
+          persist-credentials: false
+
+      - name: cargo-deny
+        uses: EmbarkStudios/cargo-deny-action@e2f4ede4a4e60ea15ff31bc0647485d80c66cfba  # v2.0.4
+        with:
+          command: check

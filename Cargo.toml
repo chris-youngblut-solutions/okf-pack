@@ -1,0 +1,25 @@
+[package]
+name = "okf-pack"
+version = "0.1.0"
+edition = "2024"          # stable since Rust 1.85 (2025-02); required for let-chains
+rust-version = "1.85"     # MSRV: edition 2024 + let-chains
+
+[dependencies]
+anyhow = "1.0.102"
+clap = { version = "4.6.1", features = ["derive"] }
+duckdb = { version = "1.10504.0", features = ["bundled"] }
+pulldown-cmark = "0.13.4"
+regex = "1.12.4"
+reqwest = { version = "0.13.4", default-features = false, features = ["blocking", "json"] }
+schemars = "1.2.1"
+serde = { version = "1.0.228", features = ["derive"] }
+serde_json = "1.0.150"
+serde_yml = "0.0.13"
+sha2 = "0.11.0"
+thiserror = "2.0.18"
+time = "0.3.49"
+toml = "1.1.2"
+
+[dev-dependencies]
+insta = "1.48.0"
+proptest = "1.11.0"

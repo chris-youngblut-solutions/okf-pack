@@ -1,0 +1,17 @@
+# Spaces pack manifest for {{NAME}} — stamped by `okf-pack init`.
+id       = "{{PACK_ID}}"
+provides = "tile.{{COMPONENT}}"
+
+[runtime]
+kind = "process"
+cmd  = "okf-pack"
+args = ["serve", "--rpc", "stdio"]
+io   = "stdio-jsonrpc"
+
+[binds]
+cwd     = "$SPACE_DIR"
+inherit = ["env", "manifest"]
+
+[capabilities]
+fs  = "space-dir"
+net = "{{NET_MODE}}"
