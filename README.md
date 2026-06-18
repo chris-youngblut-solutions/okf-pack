@@ -87,6 +87,10 @@ Library + CLI, version `0.1.0` (pre-1.0 SemVer; the `okf-ext/0.1` format and the
   export is follow-up work (see [`docs/adr/0002`](docs/adr/0002-pack-owns-store-open-dispatch.md)).
 - **Not built.** No graph-database backend, no external SDK package, no default
   embedder — a Space must declare one.
+- **Known follow-up.** YAML is parsed via `serde_yml`, which has an unsoundness
+  advisory ([RUSTSEC-2025-0068](https://rustsec.org/advisories/RUSTSEC-2025-0068))
+  and is unmaintained; migration to `serde_norway` is planned. okf-pack parses
+  trusted local files, so the practical risk is low.
 
 ## Development
 

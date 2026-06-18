@@ -9,7 +9,12 @@ all-features = true
 db-path = "~/.cargo/advisory-db"
 db-urls = ["https://github.com/rustsec/advisory-db"]
 yanked = "deny"
-ignore = []
+# RUSTSEC-2025-0068: serde_yml is unsound (a crafted input to Serializer.emitter
+# can segfault) and unmaintained (project archived). okf-pack parses/serializes
+# TRUSTED LOCAL knowledge files, not adversarial input, so the practical risk is
+# low. TODO(follow-up): migrate to serde_norway (maintained serde_yaml fork) and
+# drop this ignore.
+ignore = ["RUSTSEC-2025-0068"]
 
 [licenses]
 # Permissive licenses we accept without case-by-case review.
@@ -23,6 +28,7 @@ allow = [
     "MPL-2.0",
     "Unicode-DFS-2016",
     "Unicode-3.0",
+    "CDLA-Permissive-2.0",
     "CC0-1.0",
     "0BSD",
     "Zlib",
