@@ -2,7 +2,7 @@
 
 OKF-compatible knowledge-context format and bidirectional adapter (Rust), packaged as a Spaces pack (the architecture supports hot-swap; the knowledge methods are still stubs).
 
-**Tier**: T1  **Language**: rust  **Test discipline**: pragmatic
+**Tier**: T2 (public)  **Language**: rust  **Test discipline**: pragmatic
 
 This file is **read by every Claude Code session** that opens this repo.
 Keep it short, scannable, and load-bearing. Long-form prose belongs in
